@@ -73,7 +73,7 @@ while tryAgain == True:
     #Generating a model... (State size refers to the # of words in each markov state)
     text_model = POSifiedText(text, state_size=2)
     for i in range(num):
-        new_stuff.write(text_model.make_sentence())
+        new_stuff.write(text_model.make_short_sentence())
         new_stuff.write("\n")
     new_stuff.close()
     
