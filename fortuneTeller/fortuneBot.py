@@ -1,6 +1,5 @@
 # =============================================================================
 # A fortune telling bot.
-# Using markov chains, we're generating new text via new
 # =============================================================================
 import tweepy
 import markovify
@@ -33,8 +32,9 @@ api = tweepy.API(auth)
 #Follows everyone that follows Zostra
 for follower in tweepy.Cursor(api.followers).items():
     follower.follow()
+    
 # =============================================================================
-# Markovifying all of it.
+# Markovifying all of the source text.
 # =============================================================================
 originalFortunes = 'fortunes.txt'
 
@@ -55,7 +55,9 @@ while True:
         else:
             tryAgain = False
 
-#Attempting to post something to Twitter.
+# ============================================================================= 
+# #Attempting to post something to Twitter.
+# =============================================================================
     print(newSentence)
     try:
         api.update_status(status=newSentence)
