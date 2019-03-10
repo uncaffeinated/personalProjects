@@ -19,6 +19,11 @@ class POSifiedText(markovify.Text):
         return sentence
 
 #Connecting to Twitter. 
+consumer_key = "ZPaFv2tsEPwnwR8jzABbNxRYr"
+consumer_secret = "KLWMib19o8XrTOItKhceQHyGFkN4CguhM7z2gLkQxxLNKMeOUN"
+
+access_key = "1096539403734974464-VpAXQhj8sbIsqKMgifgnQ24j5nurEW"
+access_secret = "5Bg5HCOJUlDmcl2E5sn5TBLrkHWMqNkCmrgesgu9D9GG5"
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 
@@ -65,5 +70,5 @@ while True:
     except:
         print("Something went wrong.")
     #Sets the time between tweets in seconds. 1800 = 30 minutes. 3600 = 1 hour.
-    time.sleep(1800)
+    time.sleep(3600)
 

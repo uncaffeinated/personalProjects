@@ -1,44 +1,22 @@
 import random as rand
 
-# =============================================================================
-# STAT BLOCK
-# =============================================================================
-name = "Otto Hildebrand"
-HP = 50
-AC = 20
-mods = {"STR": 4, "DEX": 2, "CON": 2, "INT": 1, "WIS": 3, "CHA": -2}
-weapon = {"atk": 9, "dmg": 10, "critMult": 3, "critRange": 20}
-sacredWeapon = {"Uses": 5, "Merciful":False, "Defensive":False, "Flaming":False, "Frost":False, "Keen":False}
-fervor = {"Uses": 5, "Divine":False, "Bull":False, "Bear": False, "Sanctuary":False, "Shield of Faith":False}
-
-# =============================================================================
-# FUNCTIONS
-# =============================================================================
-# Rolling to attack
 def attackRoll(weapon, fervor, sacredWeapon):
     crit = False
-    roll = rand.randint(1, 20)
-    nat = roll
+    nat = rand.randint(1, 20)
+    roll = nat + weapon["atk"]
     
     # Crit checks
-    if sacredWeapon["Keen"] == True:
-        if roll >= 19:
-            crit = True
-    elif roll == 20:
+    if ((sacredWeapon["Keen"] == True) and (nat >= 19)) or (nat == 20):
         crit = True
         
     # Did we use fervor at all?
-    if fervor["Divine"] == True:
-        roll += 2
-    if fervor["Bull"] == True:
+    if (fervor["Divine"] == True) or (fervor["Bull"] == True):
         roll += 2
     
-    # Adding our attack modified
-    roll += weapon["atk"]
+    # Finalizing attack roll.
     atkRoll = [roll, crit, nat]
     return atkRoll
 
-# Rolling for damage
 def damageRoll(mods, weapon, crit, fervor, sacredWeapon):
     # Rolling for raw damage
     dmg = rand.randint(1, weapon["dmg"]) + mods["STR"]
@@ -91,29 +69,8 @@ def myTurn(mods, weapon, fervor, sacredWeapon):
                 swiftAction = False
         
         # Seeing if we want to use fervor
-        if swiftAction == True:
-            if fervor["Uses"] != 0:
-                fervAns = input("Would you like to use Fervor? ")
-                if fervAns == "Y":
-                    tryFerv = True
-                    while tryFerv == True:
-                        divine = input("Divine Favor? ")
-                        if (divine == "Y"): 
-                            fervor["Divine"] = True
-                            fervor["Uses"] -= 1
-                            swiftAction = False
-                            tryFerv = False
-                        
-                        if tryFerv == True:
-                            bull = input("Bull's Strength? ")
-                            if (bull == "Y"):
-                                fervor["Bull"] = True
-                                fervor["Uses"] -= 1
-                                swiftAction = False
-                                tryFerv = False
-                       
-                        #Breaks if the user decided against it.
-                        tryFerv = False
+        if (swiftAction == True) and (fervor["Uses"] != 0):
+            swiftAction = useFervor(fervor, swiftAction)
        
         # Okay, let's actually go for the attack roll now.
         critFail = False
@@ -165,8 +122,23 @@ def myTurn(mods, weapon, fervor, sacredWeapon):
     results = [fervor["Uses"], sacredWeapon["Uses"]]
     return results
 
-
-def main(HP, mods, weapon, fervor, sacredWeapon):
+def useFervor(fervor, swiftAction):
+    fervAns = input("Would you like to use Fervor? ")
+    if fervAns == "Y":
+        divine = input("Divine Favor? ")
+        if (divine == "Y"): 
+            fervor["Divine"] = True
+            fervor["Uses"] -= 1
+            return False
+                        
+        bull = input("Bull's Strength? ")
+        if (bull == "Y"):
+            fervor["Bull"] = True
+            fervor["Uses"] -= 1
+            return False
+        return True
+        
+def combat(HP, mods, weapon, fervor, sacredWeapon):
     battle = True
     turn = 1
     while battle == True:
@@ -184,7 +156,7 @@ def main(HP, mods, weapon, fervor, sacredWeapon):
             turn += 1
             print("=========================================")
             print("END OF YOUR TURN")
-            print("=========================================", end="")
+            print("=========================================")
         # Did we take damage?
         try:
             healthDamage = int(input("How much damage did you take this turn? "))
@@ -192,15 +164,7 @@ def main(HP, mods, weapon, fervor, sacredWeapon):
             print("Total HP:", HP)
         except:
             print("Total HP:", HP)
-            
-# =============================================================================
-# ... FIGHT!
-# =============================================================================
-main(HP, mods, weapon, fervor, sacredWeapon)
-    
-            
-    
-    
-
-    
-    
+        endCheck = input("Is combat over? ")
+        if endCheck == "Y":
+            battle = False
+            return
