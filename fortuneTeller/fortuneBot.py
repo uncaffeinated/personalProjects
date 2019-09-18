@@ -65,5 +65,5 @@ while True:
     except:
         print("Something went wrong.")
     #Sets the time between tweets in seconds. 1800 = 30 minutes. 3600 = 1 hour.
-    time.sleep(3600)
+    time.sleep(7200)
 
